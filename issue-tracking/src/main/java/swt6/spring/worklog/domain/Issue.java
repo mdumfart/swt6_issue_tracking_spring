@@ -26,6 +26,8 @@ public class Issue implements Serializable {
     private IssuePriority priority;
 
     private double estimatedTime = 0.0d;
+    private double expendedTime = 0.0d;
+
     @Column(nullable = false)
     private double progress;
 
@@ -95,6 +97,14 @@ public class Issue implements Serializable {
 
     public void setEstimatedTime(double estimatedTime) {
         this.estimatedTime = estimatedTime;
+    }
+
+    public double getExpendedTime() {
+        return expendedTime;
+    }
+
+    public void setExpendedTime(double expendedTime) {
+        this.expendedTime = expendedTime;
     }
 
     public double getProgress() {
