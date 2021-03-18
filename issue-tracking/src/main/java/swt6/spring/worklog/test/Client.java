@@ -5,10 +5,11 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.support.AbstractApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import swt6.spring.worklog.domain.Employee;
-import swt6.spring.worklog.logic.EmployeeLogic;
-import swt6.spring.worklog.logic.EmployeeLogicImpl;
-import swt6.spring.worklog.logic.ProjectLogic;
-import swt6.spring.worklog.logic.ProjectLogicImpl;
+import swt6.spring.worklog.domain.Issue;
+import swt6.spring.worklog.domain.Project;
+import swt6.spring.worklog.domain.util.IssuePriority;
+import swt6.spring.worklog.domain.util.IssueState;
+import swt6.spring.worklog.logic.*;
 
 import static swt6.util.PrintUtil.printSeparator;
 import static swt6.util.PrintUtil.printTitle;
@@ -27,6 +28,17 @@ public class Client {
             employee1 = employeeLogic.save(employee1);
 
             System.out.println(employee1);
+
+            ProjectLogic projectLogic = factory.getBean(ProjectLogic.class);
+            IssueLogic issueLogic = factory.getBean(IssueLogic.class);
+
+            Project project1 = new Project("TestProject1");
+
+            projectLogic.save(project1);
+
+            Issue issue1 = new Issue("testIssue1", IssueState.nev, IssuePriority.low, 0.0, project1);
+
+            issueLogic.create(issue1);
         }
     }
 

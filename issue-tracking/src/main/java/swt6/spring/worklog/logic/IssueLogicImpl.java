@@ -1,10 +1,14 @@
 package swt6.spring.worklog.logic;
 
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import swt6.spring.worklog.dao.IssueDao;
 import swt6.spring.worklog.domain.Issue;
 
 import java.util.Optional;
 
+@Service
+@Transactional
 public class IssueLogicImpl implements IssueLogic {
     private IssueDao issueDao;
 

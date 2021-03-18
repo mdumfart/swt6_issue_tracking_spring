@@ -36,7 +36,7 @@ public class Issue implements Serializable {
     private Employee employee;
 
     @org.hibernate.annotations.Fetch(FetchMode.SELECT)
-    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     private Project project;
 
     @org.hibernate.annotations.Fetch(FetchMode.SELECT)
