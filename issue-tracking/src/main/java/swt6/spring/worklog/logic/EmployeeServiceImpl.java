@@ -37,6 +37,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<Employee> findByProject(Project project) {
         return employeeDao.findByProject(project);
     }

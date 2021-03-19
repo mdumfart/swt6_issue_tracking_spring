@@ -19,11 +19,13 @@ public class IssueServiceImpl implements IssueService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Optional<Issue> findById(long id) {
         return issueDao.findById(id);
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<Issue> findAll() {
         return issueDao.findAll(Sort.by(Sort.Direction.ASC, "id"));
     }

@@ -5,11 +5,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import swt6.spring.worklog.dao.ProjectDao;
 import swt6.spring.worklog.domain.Employee;
+import swt6.spring.worklog.domain.Issue;
 import swt6.spring.worklog.domain.LogbookEntry;
 import swt6.spring.worklog.domain.Project;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -60,15 +62,14 @@ public class ProjectServiceImpl implements ProjectService {
         Optional<Project> optionalP = projectDao.findById(project.getId());
         Optional<Employee> optionalE = employeeService.findById(employee.getId());
 
-        if (!optionalP.isPresent()) throw new IllegalArgumentException("Project not found");
-        if (!optionalE.isPresent()) throw new IllegalArgumentException("Employee not found");
+        checkProjectAndEmployeeAvailable(optionalP, optionalE);
 
         Project p = optionalP.get();
         Employee e = optionalE.get();
 
         if (!employeeService.findByProject(p).contains(e)) throw new IllegalArgumentException("Employee is not assigned to project");
 
-        int timeSum = 0;
+        double timeSum = 0;
 
         for (LogbookEntry lbe : logbookEntryService.findByProjectAndEmployee(p, e)) {
             timeSum += lbe.getTimeSpent();
@@ -79,6 +80,30 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     public double getTimeToInvestInProjectByEmployee(Project project, Employee employee) {
-        return 0;
+        Optional<Project> optionalP = projectDao.findById(project.getId());
+        Optional<Employee> optionalE = employeeService.findById(employee.getId());
+
+        checkProjectAndEmployeeAvailable(optionalP, optionalE);
+
+        Project p = optionalP.get();
+        Employee e = optionalE.get();
+
+        if (!employeeService.findByProject(p).contains(e)) throw new IllegalArgumentException("Employee is not assigned to project");
+
+        double timeSumEstimated = 0;
+        double timeSumSpent = 0;
+
+        List<Issue> issues = p.getIssues().stream().filter(issue -> issue.getEmployee().equals(e)).collect(Collectors.toList());
+        for (Issue i : issues) {
+            timeSumEstimated += i.getEstimatedTime();
+            timeSumEstimated += i.getExpendedTime();
+        }
+
+        return timeSumEstimated - timeSumSpent;
+    }
+
+    private void checkProjectAndEmployeeAvailable(Optional<Project> project, Optional<Employee> employee) {
+        if (!project.isPresent()) throw new IllegalArgumentException("Project not found");
+        if (!employee.isPresent()) throw new IllegalArgumentException("Employee not found");
     }
 }
