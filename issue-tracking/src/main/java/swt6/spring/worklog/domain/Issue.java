@@ -39,9 +39,10 @@ public class Issue implements Serializable {
     @ManyToOne(fetch = FetchType.LAZY)
     private Project project;
 
-    @org.hibernate.annotations.Fetch(FetchMode.SELECT)
-    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.LAZY)
-    private Set<LogbookEntry> logbookEntries = new HashSet<>();
+    // LogbookEntries are not available since they are not that important
+//    @org.hibernate.annotations.Fetch(FetchMode.SELECT)
+//    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.LAZY)
+//    private Set<LogbookEntry> logbookEntries = new HashSet<>();
 
     public Issue() {
     }
@@ -131,22 +132,22 @@ public class Issue implements Serializable {
         this.project = project;
     }
 
-    public Set<LogbookEntry> getLogbookEntries() {
-        return logbookEntries;
-    }
-
-    public void setLogbookEntries(Set<LogbookEntry> logbookEntries) {
-        this.logbookEntries = logbookEntries;
-    }
-
-    public void addLogbookEntry(LogbookEntry entry) {
-        if (entry.getIssue() != null) {
-            entry.getIssue().logbookEntries.remove(entry);
-        }
-
-        logbookEntries.add(entry);
-        entry.setIssue(this);
-    }
+//    public Set<LogbookEntry> getLogbookEntries() {
+//        return logbookEntries;
+//    }
+//
+//    public void setLogbookEntries(Set<LogbookEntry> logbookEntries) {
+//        this.logbookEntries = logbookEntries;
+//    }
+//
+//    public void addLogbookEntry(LogbookEntry entry) {
+//        if (entry.getIssue() != null) {
+//            entry.getIssue().logbookEntries.remove(entry);
+//        }
+//
+//        logbookEntries.add(entry);
+//        entry.setIssue(this);
+//    }
 
     @Override
     public String toString() {
@@ -170,11 +171,11 @@ public class Issue implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Issue issue = (Issue) o;
-        return Double.compare(issue.estimatedTime, estimatedTime) == 0 && Double.compare(issue.progress, progress) == 0 && id.equals(issue.id) && name.equals(issue.name) && state == issue.state && priority == issue.priority && Objects.equals(employee, issue.employee) && project.equals(issue.project) && Objects.equals(logbookEntries, issue.logbookEntries);
+        return Double.compare(issue.estimatedTime, estimatedTime) == 0 && Double.compare(issue.progress, progress) == 0 && id.equals(issue.id) && name.equals(issue.name) && state == issue.state && priority == issue.priority && Objects.equals(employee, issue.employee) && project.equals(issue.project);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, state, priority, estimatedTime, progress, employee, project, logbookEntries);
+        return Objects.hash(id, name, state, priority, estimatedTime, progress, employee, project);
     }
 }

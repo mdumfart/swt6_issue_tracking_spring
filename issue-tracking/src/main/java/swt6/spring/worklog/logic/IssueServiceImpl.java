@@ -1,19 +1,31 @@
 package swt6.spring.worklog.logic;
 
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import swt6.spring.worklog.dao.IssueDao;
 import swt6.spring.worklog.domain.Issue;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
 @Transactional
-public class IssueLogicImpl implements IssueLogic {
+public class IssueServiceImpl implements IssueService {
     private IssueDao issueDao;
 
-    public IssueLogicImpl(IssueDao issueDao) {
+    public IssueServiceImpl(IssueDao issueDao) {
         this.issueDao = issueDao;
+    }
+
+    @Override
+    public Optional<Issue> findById(long id) {
+        return issueDao.findById(id);
+    }
+
+    @Override
+    public List<Issue> findAll() {
+        return issueDao.findAll(Sort.by(Sort.Direction.ASC, "id"));
     }
 
     @Override

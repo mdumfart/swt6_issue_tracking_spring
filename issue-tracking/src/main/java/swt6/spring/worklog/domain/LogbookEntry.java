@@ -6,6 +6,7 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 
 @Entity
 public class LogbookEntry implements Serializable {
@@ -78,14 +79,6 @@ public class LogbookEntry implements Serializable {
     }
 
     public void attachEmployee(Employee employee) {
-        if (this.employee != null) {
-            this.employee.getLogbookEntries().remove(this);
-        }
-
-        if (employee != null) {
-            employee.getLogbookEntries().add(this);
-        }
-
         this.employee = employee;
     }
 
@@ -98,15 +91,11 @@ public class LogbookEntry implements Serializable {
     }
 
     public void attachIssue(Issue issue) {
-        if (this.issue != null) {
-            this.issue.getLogbookEntries().remove(this);
-        }
-
-        if (issue != null) {
-            issue.getLogbookEntries().add(this);
-        }
-
         this.issue = issue;
+    }
+
+    public double getTimeSpent() {
+        return ChronoUnit.MINUTES.between(startTime, endTime) / 60d;
     }
 
     @Override

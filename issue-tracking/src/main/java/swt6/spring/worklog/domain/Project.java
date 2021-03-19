@@ -18,6 +18,9 @@ public class Project implements Serializable {
     @Column(nullable = false)
     private String name;
 
+    // Employees are not provided through the project object
+    // since the issues are more important and the assigned employee is provided there
+
     @org.hibernate.annotations.Fetch(FetchMode.SELECT)
     @OneToMany(mappedBy = "project", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<Issue> issues = new HashSet<>();
@@ -77,6 +80,10 @@ public class Project implements Serializable {
 
     public void addEmployee(Employee employee) {
         employees.add(employee);
+    }
+
+    public void removeEmployee(Employee employee) {
+        employees.remove(employee);
     }
 
     public String toString() {

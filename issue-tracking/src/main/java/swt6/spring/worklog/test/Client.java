@@ -1,7 +1,5 @@
 package swt6.spring.worklog.test;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.support.AbstractApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import swt6.spring.worklog.domain.Employee;
@@ -21,7 +19,7 @@ public class Client {
         try (AbstractApplicationContext factory = new ClassPathXmlApplicationContext(
                 "swt6/spring/worklog/applicationContext.xml")) {
 
-            EmployeeLogic employeeLogic = factory.getBean(EmployeeLogic.class);
+            EmployeeService employeeLogic = factory.getBean(EmployeeService.class);
 
             Employee employee1 = new Employee("Michael", "Dumfart", LocalDate.of(1997, 5, 14));
 
@@ -29,8 +27,8 @@ public class Client {
 
             System.out.println(employee1);
 
-            ProjectLogic projectLogic = factory.getBean(ProjectLogic.class);
-            IssueLogic issueLogic = factory.getBean(IssueLogic.class);
+            ProjectService projectLogic = factory.getBean(ProjectService.class);
+            IssueService issueLogic = factory.getBean(IssueService.class);
 
             Project project1 = new Project("TestProject1");
 

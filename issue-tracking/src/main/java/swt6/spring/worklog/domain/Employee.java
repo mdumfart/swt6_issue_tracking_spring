@@ -28,15 +28,6 @@ public class Employee implements Serializable {
     private Address address;
 
     @org.hibernate.annotations.Fetch(FetchMode.SELECT)
-    @OneToMany(mappedBy = "employee", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private Set<LogbookEntry> logbookEntries = new HashSet<>();
-
-    @ElementCollection
-    @CollectionTable(name = "EMPL_PHONES", joinColumns = @JoinColumn(name = "EMPL_ID"))
-    @Column(name = "PHONE_NUMBER")
-    private Set<String> phones = new HashSet<>();
-
-    @org.hibernate.annotations.Fetch(FetchMode.SELECT)
     @OneToMany(mappedBy = "employee", cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.LAZY)
     private Set<Issue> issues = new HashSet<>();
 
@@ -87,35 +78,6 @@ public class Employee implements Serializable {
 
     public void setAddress(Address address) {
         this.address = address;
-    }
-
-    public Set<String> getPhones() {
-        return phones;
-    }
-
-    public void setPhones(Set<String> phones) {
-        this.phones = phones;
-    }
-
-    public void addPhones(String phone) {
-        phones.add(phone);
-    }
-
-    public Set<LogbookEntry> getLogbookEntries() {
-        return logbookEntries;
-    }
-
-    public void setLogbookEntries(Set<LogbookEntry> logbookEntries) {
-        this.logbookEntries = logbookEntries;
-    }
-
-    public void addLogbookEntry(LogbookEntry entry) {
-        if (entry.getEmployee() != null) {
-            entry.getEmployee().logbookEntries.remove(entry);
-        }
-
-        logbookEntries.add(entry);
-        entry.setEmployee(this);
     }
 
     public Set<Issue> getIssues() {
