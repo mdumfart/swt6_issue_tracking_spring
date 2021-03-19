@@ -13,24 +13,24 @@
 
     <context:annotation-config/>
     <context:component-scan base-package="swt6.spring.worklog.logic"/>
-    <context:property-placeholder location="swt6/spring/worklog/jpa.properties" />
+    <context:property-placeholder location="swt6/spring/worklog/jpa.properties"/>
 
     <jpa:repositories base-package="swt6.spring.worklog.dao"/>
 
     <bean id="dataSource" class="org.apache.commons.dbcp2.BasicDataSource"
           destroy-method="close">
-        <property name="driverClassName" value="${database.driverClassName}" />
-        <property name="url" value="${database.url}" />
-        <property name="username" value="${database.username}" />
-        <property name="password" value="${database.password}" />
+        <property name="driverClassName" value="${database.driverClassName}"/>
+        <property name="url" value="${database.url}"/>
+        <property name="username" value="${database.username}"/>
+        <property name="password" value="${database.password}"/>
     </bean>
 
     <bean id="entityManagerFactory"
           class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
-        <property name="dataSource" ref="dataSource" />
-        <property name="packagesToScan" value="swt6.spring.worklog.domain" />
+        <property name="dataSource" ref="dataSource"/>
+        <property name="packagesToScan" value="swt6.spring.worklog.domain"/>
         <property name="jpaVendorAdapter">
-            <bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter" />
+            <bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter"/>
         </property>
         <property name="jpaProperties">
             <props>
@@ -43,10 +43,10 @@
     </bean>
 
     <!-- BeanPostProcessor that processes @PersistenceContext for injecting EntityManager -->
-    <bean class="org.springframework.orm.jpa.support.PersistenceAnnotationBeanPostProcessor" />
+    <bean class="org.springframework.orm.jpa.support.PersistenceAnnotationBeanPostProcessor"/>
 
     <!-- BeanPostProcessor for exception translation -->
-    <bean class="org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor" />
+    <bean class="org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor"/>
 
     <!-- ============================ DAO DEFINITIONS =========================== -->
 

@@ -19,24 +19,24 @@ public class Client {
         try (AbstractApplicationContext factory = new ClassPathXmlApplicationContext(
                 "swt6/spring/worklog/applicationContext.xml")) {
 
-            EmployeeService employeeLogic = factory.getBean(EmployeeService.class);
+            EmployeeService employeeService = factory.getBean(EmployeeService.class);
 
             Employee employee1 = new Employee("Michael", "Dumfart", LocalDate.of(1997, 5, 14));
 
-            employee1 = employeeLogic.save(employee1);
+            employee1 = employeeService.save(employee1);
 
             System.out.println(employee1);
 
-            ProjectService projectLogic = factory.getBean(ProjectService.class);
-            IssueService issueLogic = factory.getBean(IssueService.class);
+            ProjectService projectService = factory.getBean(ProjectService.class);
+            IssueService issueService = factory.getBean(IssueService.class);
 
             Project project1 = new Project("TestProject1");
 
-            projectLogic.save(project1);
+            projectService.save(project1);
+
 
             Issue issue1 = new Issue("testIssue1", IssueState.nev, IssuePriority.low, 0.0, project1);
-
-            issueLogic.create(issue1);
+            issueService.create(issue1);
         }
     }
 
