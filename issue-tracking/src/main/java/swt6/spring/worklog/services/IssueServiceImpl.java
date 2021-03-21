@@ -1,10 +1,11 @@
-package swt6.spring.worklog.logic;
+package swt6.spring.worklog.services;
 
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import swt6.spring.worklog.dao.IssueDao;
 import swt6.spring.worklog.domain.Issue;
+import swt6.spring.worklog.domain.LogbookEntry;
 
 import java.util.List;
 import java.util.Optional;
@@ -12,10 +13,12 @@ import java.util.Optional;
 @Service
 @Transactional
 public class IssueServiceImpl implements IssueService {
-    private IssueDao issueDao;
+    private final IssueDao issueDao;
+    private final LogbookEntryService logbookEntryService;
 
-    public IssueServiceImpl(IssueDao issueDao) {
+    public IssueServiceImpl(IssueDao issueDao, LogbookEntryService logbookEntryService) {
         this.issueDao = issueDao;
+        this.logbookEntryService = logbookEntryService;
     }
 
     @Override
@@ -35,6 +38,12 @@ public class IssueServiceImpl implements IssueService {
         if (issue.getProject() == null)
             throw new IllegalArgumentException("No project provided for issue");
 
+        if (issue.getEmployee() != null && !issue.getProject().getEmployees().contains(issue.getEmployee()))
+            throw new IllegalArgumentException("Assigned employee to issue must be involved in project");
+
+        if (issue.getEmployee() != null && issue.getEstimatedTime() <= 0)
+            throw new IllegalArgumentException("Estimated time must be provided, when an employee is assigned");
+
         return issueDao.save(issue);
     }
 
@@ -43,7 +52,7 @@ public class IssueServiceImpl implements IssueService {
         Optional<Issue> persistedIssueOptional = issueDao.findById(issue.getId());
 
         // Check if issue does exist
-        if (!persistedIssueOptional.isPresent())
+        if (persistedIssueOptional.isEmpty())
             throw new IllegalArgumentException("Issue does not exist");
 
         Issue persistedIssue = persistedIssueOptional.get();
@@ -66,6 +75,19 @@ public class IssueServiceImpl implements IssueService {
                 throw new IllegalArgumentException("Assigned employee to issue must be involved in project");
             }
         }
+
+        issueDao.save(issue);
+    }
+
+    @Override
+    public void updateExpendedTime(Issue issue) {
+        double time = 0.0;
+
+        for (LogbookEntry lbe : logbookEntryService.findByIssue(issue)) {
+            time += lbe.getTimeSpent();
+        }
+
+        issue.setExpendedTime(time);
 
         issueDao.save(issue);
     }

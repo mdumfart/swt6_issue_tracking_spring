@@ -1,6 +1,5 @@
-package swt6.spring.worklog.logic;
+package swt6.spring.worklog.services;
 
-import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import swt6.spring.worklog.dao.AddressDao;
 import swt6.spring.worklog.domain.Address;

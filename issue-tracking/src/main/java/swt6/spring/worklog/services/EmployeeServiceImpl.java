@@ -1,4 +1,4 @@
-package swt6.spring.worklog.logic;
+package swt6.spring.worklog.services;
 
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;

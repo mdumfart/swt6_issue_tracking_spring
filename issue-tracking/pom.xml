@@ -16,6 +16,7 @@
         <maven.compiler.target>11</maven.compiler.target>
         <postgresql.version>42.2.19</postgresql.version>
         <h2database.version>1.4.200</h2database.version>
+        <spring-shell-starter.version>2.0.1.RELEASE</spring-shell-starter.version>
     </properties>
 
     <dependencies>
@@ -101,11 +102,6 @@
         </dependency>
 
         <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-log4j12</artifactId>
-        </dependency>
-
-        <dependency>
             <groupId>javax.annotation</groupId>
             <artifactId>javax.annotation-api</artifactId>
         </dependency>
@@ -114,6 +110,12 @@
             <groupId>org.springframework</groupId>
             <artifactId>spring-test</artifactId>
             <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.shell</groupId>
+            <artifactId>spring-shell-starter</artifactId>
+            <version>${spring-shell-starter.version}</version>
         </dependency>
     </dependencies>
 </project>

@@ -1,6 +1,5 @@
-package swt6.spring.worklog.logic;
+package swt6.spring.worklog.services;
 
-import org.springframework.stereotype.Component;
 import swt6.spring.worklog.domain.Employee;
 import swt6.spring.worklog.domain.Project;
 

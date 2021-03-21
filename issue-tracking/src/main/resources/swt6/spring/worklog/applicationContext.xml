@@ -12,7 +12,7 @@
     <!-- ========================= RESOURCE DEFINITIONS ========================= -->
 
     <context:annotation-config/>
-    <context:component-scan base-package="swt6.spring.worklog.logic"/>
+    <context:component-scan base-package="swt6.spring.worklog.services"/>
     <context:property-placeholder location="swt6/spring/worklog/jpa.properties"/>
 
     <jpa:repositories base-package="swt6.spring.worklog.dao"/>
@@ -67,7 +67,7 @@
     </tx:advice>
 
     <aop:config>
-        <aop:pointcut id="transactedOperations" expression="execution(public * swt6.spring.worklog.logic.WorklogImpl1.*(..))"/>
+        <aop:pointcut id="transactedOperations" expression="execution(public * swt6.spring.worklog.services.WorklogImpl1.*(..))"/>
         <aop:advisor advice-ref="txAdvice" pointcut-ref="transactedOperations"/>
     </aop:config>
     -->

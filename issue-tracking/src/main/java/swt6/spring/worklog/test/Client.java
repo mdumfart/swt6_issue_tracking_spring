@@ -7,7 +7,7 @@ import swt6.spring.worklog.domain.Issue;
 import swt6.spring.worklog.domain.Project;
 import swt6.spring.worklog.domain.util.IssuePriority;
 import swt6.spring.worklog.domain.util.IssueState;
-import swt6.spring.worklog.logic.*;
+import swt6.spring.worklog.services.*;
 
 import static swt6.util.PrintUtil.printSeparator;
 import static swt6.util.PrintUtil.printTitle;

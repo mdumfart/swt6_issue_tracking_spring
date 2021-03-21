@@ -1,4 +1,4 @@
-package swt6.spring.worklog.logic;
+package swt6.spring.worklog.services;
 
 import swt6.spring.worklog.domain.Address;
 import swt6.spring.worklog.domain.util.AddressPK;

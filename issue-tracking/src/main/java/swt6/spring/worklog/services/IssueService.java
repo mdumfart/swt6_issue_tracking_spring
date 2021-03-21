@@ -1,4 +1,4 @@
-package swt6.spring.worklog.logic;
+package swt6.spring.worklog.services;
 
 import swt6.spring.worklog.domain.Issue;
 
@@ -10,4 +10,5 @@ public interface IssueService {
     List<Issue> findAll();
     Issue create(Issue issue);
     void update(Issue issue);
+    void updateExpendedTime(Issue issue);
 }

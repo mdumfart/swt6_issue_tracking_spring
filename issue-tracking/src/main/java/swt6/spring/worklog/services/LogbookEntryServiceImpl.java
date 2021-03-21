@@ -1,4 +1,4 @@
-package swt6.spring.worklog.logic;
+package swt6.spring.worklog.services;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,10 +14,12 @@ import java.util.Optional;
 @Service
 @Transactional
 public class LogbookEntryServiceImpl implements LogbookEntryService {
-    private LogbookEntryDao logbookEntryDao;
+    private final LogbookEntryDao logbookEntryDao;
+    private final IssueService issueService;
 
-    public LogbookEntryServiceImpl(LogbookEntryDao logbookEntryDao) {
+    public LogbookEntryServiceImpl(LogbookEntryDao logbookEntryDao, IssueService issueService) {
         this.logbookEntryDao = logbookEntryDao;
+        this.issueService = issueService;
     }
 
     @Override
@@ -34,12 +36,16 @@ public class LogbookEntryServiceImpl implements LogbookEntryService {
 
     @Override
     public LogbookEntry save(LogbookEntry logbookEntry) {
-        return logbookEntryDao.save(logbookEntry);
+        LogbookEntry lbe = logbookEntryDao.save(logbookEntry);
+        issueService.updateExpendedTime(lbe.getIssue());
+
+        return lbe;
     }
 
     @Override
     public void delete(LogbookEntry logbookEntry) {
         logbookEntryDao.delete(logbookEntry);
+        issueService.updateExpendedTime(logbookEntry.getIssue());
     }
 
     @Override
