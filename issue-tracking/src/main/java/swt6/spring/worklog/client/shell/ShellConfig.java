@@ -24,7 +24,6 @@ import org.springframework.shell.standard.commands.StandardCommandsAutoConfigura
         StandardAPIAutoConfiguration.class,
         StandardCommandsAutoConfiguration.class
 })
-@ComponentScan(basePackages = "swt6.spring.worklog.client")
 public class ShellConfig {
 
     @Bean("inputProvider")

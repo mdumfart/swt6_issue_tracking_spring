@@ -118,4 +118,25 @@
             <version>${spring-shell-starter.version}</version>
         </dependency>
     </dependencies>
+
+    <build>
+        <plugins>
+            <!-- run with: mvn exec:java -->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>${exec-plugin.version}</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>java</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <mainClass>swt6.spring.worklog.client.App</mainClass>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 </project>

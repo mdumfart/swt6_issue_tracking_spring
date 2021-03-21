@@ -14,11 +14,14 @@ import java.util.Optional;
 @Service
 @Transactional
 public class LogbookEntryServiceImpl implements LogbookEntryService {
-    private final LogbookEntryDao logbookEntryDao;
-    private final IssueService issueService;
+    private LogbookEntryDao logbookEntryDao;
+    private IssueService issueService;
 
-    public LogbookEntryServiceImpl(LogbookEntryDao logbookEntryDao, IssueService issueService) {
+    public void setLogbookEntryDao(LogbookEntryDao logbookEntryDao) {
         this.logbookEntryDao = logbookEntryDao;
+    }
+
+    public void setIssueService(IssueService issueService) {
         this.issueService = issueService;
     }
 

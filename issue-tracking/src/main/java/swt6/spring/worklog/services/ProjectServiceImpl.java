@@ -1,5 +1,6 @@
 package swt6.spring.worklog.services;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,9 +21,18 @@ public class ProjectServiceImpl implements ProjectService {
     private EmployeeService employeeService;
     private LogbookEntryService logbookEntryService;
 
-    public ProjectServiceImpl(ProjectDao projectDao, EmployeeService employeeService, LogbookEntryService logbookEntryService) {
+    @Autowired
+    public void setProjectDao(ProjectDao projectDao) {
         this.projectDao = projectDao;
+    }
+
+    @Autowired
+    public void setEmployeeService(EmployeeService employeeService) {
         this.employeeService = employeeService;
+    }
+
+    @Autowired
+    public void setLogbookEntryService(LogbookEntryService logbookEntryService) {
         this.logbookEntryService = logbookEntryService;
     }
 

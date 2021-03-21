@@ -158,5 +158,4 @@
             <artifactId>jaxb-impl</artifactId>
         </dependency>
     </dependencies>
-
 </project>

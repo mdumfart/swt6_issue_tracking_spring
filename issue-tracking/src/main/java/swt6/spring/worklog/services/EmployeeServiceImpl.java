@@ -1,5 +1,6 @@
 package swt6.spring.worklog.services;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,9 +14,10 @@ import java.util.Optional;
 @Service
 @Transactional
 public class EmployeeServiceImpl implements EmployeeService {
-    private final EmployeeDao employeeDao;
+    private EmployeeDao employeeDao;
 
-    public EmployeeServiceImpl(EmployeeDao employeeDao) {
+    @Autowired
+    public void setEmployeeDao(EmployeeDao employeeDao) {
         this.employeeDao = employeeDao;
     }
 
