@@ -12,6 +12,7 @@ import swt6.spring.worklog.services.ProjectService;
 import java.util.List;
 
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Component
 public class ProjectUiProcessComponent implements ProjectUiProcessFacade {
@@ -242,8 +243,6 @@ public class ProjectUiProcessComponent implements ProjectUiProcessFacade {
             }
         } while (project == null);
 
-        double estimatedTimeSum = getEstimatedTimeSumOfProject(project);
-
         List<Employee> employees = project.getEmployees();
 
         StringBuffer sb = new StringBuffer();
@@ -251,6 +250,8 @@ public class ProjectUiProcessComponent implements ProjectUiProcessFacade {
         sb.append(String.format("Working times for project %s%n", project.toString()));
 
         for (Employee employee : employees) {
+            double estimatedTimeSum = getEstimatedTimeSumOfProjectByEmployee(project, employee);
+
             sb.append(String.format("  %s%n", employee.toString()));
             sb.append(
                     String.format("    Time already invested: %.2fh%n",
@@ -260,16 +261,17 @@ public class ProjectUiProcessComponent implements ProjectUiProcessFacade {
                     String.format("    Time to invest: %.2fh%n",
                     projectService.getTimeToInvestInProjectByEmployee(project, employee)));
 
-            sb.append(String.format("    Estimated time sum: %.2fh", estimatedTimeSum));
+            sb.append(String.format("    Estimated time sum: %.2fh%n", estimatedTimeSum));
         }
 
         return sb.toString();
     }
 
-    private double getEstimatedTimeSumOfProject(Project project) {
+    private double getEstimatedTimeSumOfProjectByEmployee(Project project, Employee employee) {
         double timeSum = 0.0;
 
-        for (Issue issue : project.getIssues()) {
+        for (Issue issue : project.getIssues().stream().filter(
+                issue -> issue.getEmployee().getId() == employee.getId()).collect(Collectors.toList())) {
             timeSum += issue.getEstimatedTime();
         }
 

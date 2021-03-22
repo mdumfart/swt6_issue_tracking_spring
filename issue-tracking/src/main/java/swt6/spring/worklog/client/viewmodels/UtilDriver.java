@@ -140,6 +140,7 @@ public class UtilDriver {
 
         Project project1 = new Project("Apollo");
         project1.addEmployee(empl1);
+        project1.addEmployee(empl2);
 
         projectService.save(project1);
 
@@ -153,8 +154,13 @@ public class UtilDriver {
         issue2.setEmployee(empl1);
         issue2.setEstimatedTime(3.5);
 
+        Issue issue3 = new Issue("Create Movie Detail Page", IssueState.open, IssuePriority.low, project1);
+        issue3.setEmployee(empl2);
+        issue3.setEstimatedTime(5);
+
         issueService.create(issue1);
         issueService.create(issue2);
+        issueService.create(issue3);
 
         // CREATE LOGBOOKENTRIES ==============================================
 
@@ -172,7 +178,15 @@ public class UtilDriver {
         lbe2.setIssue(issue2);
         lbe2.setEmployee(empl1);
 
+        LogbookEntry lbe3 = new LogbookEntry(
+                "Fix some strange frontend bug",
+                LocalDateTime.of(2021, 3, 22, 14, 0),
+                LocalDateTime.of(2021, 3, 22, 16, 30));
+        lbe3.setIssue(issue3);
+        lbe3.setEmployee(empl2);
+
         logbookEntryService.save(lbe1);
         logbookEntryService.save(lbe2);
+        logbookEntryService.save(lbe3);
     }
 }
