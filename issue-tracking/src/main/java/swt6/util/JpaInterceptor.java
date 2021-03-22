@@ -9,6 +9,8 @@ import org.springframework.transaction.support.TransactionSynchronizationManager
 import javax.persistence.EntityManagerFactory;
 
 public class JpaInterceptor {
+
+    protected final Logger logger = LoggerFactory.getLogger(this.getClass());
     private EntityManagerFactory entityManagerFactory;
 
     protected EntityManagerFactory getEntityManagerFactory() {
@@ -27,6 +29,7 @@ public class JpaInterceptor {
         if (TransactionSynchronizationManager.hasResource(entityManagerFactory))
             participate = true;
         else {
+            logger.trace("Opening EntityManager");
             JpaUtil.openEntityManager(entityManagerFactory);
         }
 
@@ -35,6 +38,7 @@ public class JpaInterceptor {
         } finally {
             if (!participate) {
                 JpaUtil.closeEntityManager(entityManagerFactory);
+                logger.trace("Closed EntityManager");
             }
         }
     }

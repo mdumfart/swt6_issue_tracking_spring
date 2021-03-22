@@ -1,4 +1,4 @@
-package swt6.spring.worklog.client.beans;
+package swt6.spring.worklog.client.viewmodels;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -13,13 +13,16 @@ import swt6.spring.worklog.services.ProjectService;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Component
-public class IssueDriver {
+public class IssueUiProcessComponent implements IssueUiProcessFacade {
     private IssueService issueService;
     private ProjectService projectService;
     private EmployeeService employeeService;
     private UtilDriver utilDriver;
+
+    private final String GROUPED_FLAG = "-g";
 
     @Autowired
     public void setIssueService(IssueService issueService) {
@@ -41,6 +44,7 @@ public class IssueDriver {
         this.utilDriver = utilDriver;
     }
 
+    @Override
     public String createCommand() {
         System.out.println("Create a new issue:");
 
@@ -134,10 +138,109 @@ public class IssueDriver {
     }
 
 
-    public String listIssues() {
-        return "todo";
+    @Override
+    public String listIssues(String option1, String option2, String option3) {
+        if (option1.isEmpty()) return "Provide a project to list issues";
+
+        Project project;
+
+        try {
+            int projectId = Integer.parseInt(option1);
+            Optional<Project> optionalP = projectService.findById(projectId);
+
+            if (optionalP.isEmpty()) throw new IllegalArgumentException();
+            project = optionalP.get();
+        } catch (Exception ex) {
+            return "Please provide a valid projectId";
+        }
+
+        boolean grouped = option2.equals(GROUPED_FLAG) || option3.equals(GROUPED_FLAG);
+
+        IssueState filterState;
+
+        if (!option2.equals(GROUPED_FLAG)) {
+            filterState = resolveFilterParam(option2);
+        }
+        else {
+            filterState = resolveFilterParam(option3);
+        }
+
+        if (!grouped) return listIssuesNotGrouped(project, filterState);
+
+        return listIssuesGrouped(project, filterState);
     }
 
+    private String listIssuesNotGrouped(Project project, IssueState filterState) {
+        List<Issue> issues = getFilteredIssuesByState(project, filterState);
+
+        if (filterState != null) {
+            return utilDriver.listCollection(
+                    String.format("Issues of project %s, filtered by %s", project.toString(), filterState.toString()),
+                    issues);
+        }
+        else {
+            return utilDriver.listCollection(
+                    String.format("Issues of project %s", project.toString()),
+                    issues);
+        }
+    }
+
+    private String listIssuesGrouped(Project project, IssueState filterState) {
+        List<Issue> issues = getFilteredIssuesByState(project, filterState);
+        List<Employee> employees = project.getEmployees();
+
+        StringBuffer sb = new StringBuffer();
+
+        if (filterState != null) {
+            sb.append(String.format("Issues of project %s, filtered by %s, grouped by Employees:%n",
+                            project.toString(), filterState.toString()));
+
+            for (Employee e : employees) {
+                sb.append(utilDriver.listCollection(
+                        String.format("Issues of %s %s:", e.getFirstName(), e.getLastName()),
+                        getFilteredIssuesByEmployee(project, e)));
+
+                sb.append(String.format("%n"));
+
+            }
+        }
+        else {
+            sb.append(String.format("Issues of project %s, grouped by Employees:%n", project.toString()));
+
+            for (Employee e : employees) {
+                sb.append(utilDriver.listCollection(
+                        String.format("Issues of %s %s:", e.getFirstName(), e.getLastName()),
+                        getFilteredIssuesByEmployee(project, e)));
+
+                sb.append(String.format("%n"));
+            }
+        }
+
+        return sb.toString();
+    }
+
+    private List<Issue> getFilteredIssuesByState(Project project, IssueState state) {
+        if (state == null) return project.getIssues();
+
+        return project.getIssues().stream().filter(issue -> issue.getState() == state).collect(Collectors.toList());
+    }
+
+    private List<Issue> getFilteredIssuesByEmployee(Project project, Employee employee) {
+        return project.getIssues().stream().filter(issue -> issue.getEmployee() == employee).collect(Collectors.toList());
+    }
+
+    private IssueState resolveFilterParam(String filterString) {
+        switch (filterString){
+            case "new": return IssueState.nev;
+            case "open": return IssueState.open;
+            case "resolved": return IssueState.resolved;
+            case "closed": return IssueState.closed;
+            case "rejected": return IssueState.rejected;
+            default: return null;
+        }
+    }
+
+    @Override
     public String updateCommand(String option) {
         Optional<Issue> optionalI;
 
@@ -201,6 +304,8 @@ public class IssueDriver {
     }
 
     private String changeProject(Issue issue) {
+        if (issue.getEmployee() != null) return "Cannot change project since an employee is already assigned";
+
         List<Project> projects = projectService.findAll();
         projects.remove(issue.getProject());
 
@@ -234,6 +339,8 @@ public class IssueDriver {
     private String assignEmployee(Issue issue) {
         List<Employee> employees = issue.getProject().getEmployees();
 
+        if (issue.getEmployee() != null) return "Issue has already an employee assigned";
+
         if (employees.isEmpty()) return "No employees available";
 
         System.out.println(utilDriver.listCollection("Available employees to assign to issue", employees));
@@ -250,7 +357,21 @@ public class IssueDriver {
 
         issue.setEmployee(optionalE.get());
 
-        return "Employee assigned successfully";
+        String resultString = "";
+
+        try {
+            issue = issueService.update(issue);
+        } catch (Exception e) {
+            resultString = e.getMessage();
+        }
+
+        if (resultString.isEmpty()) {
+            return "Employee assigned successfully";
+        }
+        else {
+            return resultString;
+        }
+
     }
 
     private Optional<Employee> findEmployeeInList(int employeeId, List<Employee> employees) {

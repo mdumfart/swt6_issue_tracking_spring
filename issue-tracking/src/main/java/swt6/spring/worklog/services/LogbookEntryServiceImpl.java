@@ -1,5 +1,6 @@
 package swt6.spring.worklog.services;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import swt6.spring.worklog.dao.LogbookEntryDao;
@@ -17,10 +18,12 @@ public class LogbookEntryServiceImpl implements LogbookEntryService {
     private LogbookEntryDao logbookEntryDao;
     private IssueService issueService;
 
+    @Autowired
     public void setLogbookEntryDao(LogbookEntryDao logbookEntryDao) {
         this.logbookEntryDao = logbookEntryDao;
     }
 
+    @Autowired
     public void setIssueService(IssueService issueService) {
         this.issueService = issueService;
     }

@@ -9,6 +9,6 @@ public interface IssueService {
     Optional<Issue> findById(long id);
     List<Issue> findAll();
     Issue create(Issue issue);
-    void update(Issue issue);
+    Issue update(Issue issue);
     void updateExpendedTime(Issue issue);
 }

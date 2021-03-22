@@ -1,10 +1,11 @@
-package swt6.spring.worklog.client.beans;
+package swt6.spring.worklog.client.viewmodels;
 
 import org.jline.reader.LineReader;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 import swt6.spring.worklog.domain.Employee;
+import swt6.spring.worklog.domain.Issue;
 import swt6.spring.worklog.domain.Project;
 import swt6.spring.worklog.services.EmployeeService;
 import swt6.spring.worklog.services.ProjectService;
@@ -13,7 +14,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Component
-public class ProjectDriver {
+public class ProjectUiProcessComponent implements ProjectUiProcessFacade {
     private LineReader lineReader;
     private ProjectService projectService;
     private EmployeeService employeeService;
@@ -40,6 +41,7 @@ public class ProjectDriver {
         this.utilDriver = utilDriver;
     }
 
+    @Override
     public String createCommand() {
         System.out.println("Create a new project:");
         String value = lineReader.readLine("Enter title> ");
@@ -49,6 +51,7 @@ public class ProjectDriver {
         return p.toString();
     }
 
+    @Override
     public String updateCommand(String option) {
         int projectId;
 
@@ -84,6 +87,7 @@ public class ProjectDriver {
         return updateProject(optionalP.get());
     }
 
+    @Override
     public void printAllProjects() {
         List<Project> projectList = projectService.findAll();
 
@@ -203,9 +207,72 @@ public class ProjectDriver {
         return "success";
     }
 
-    public String listProjects() {
-        List<Project> projects = projectService.findAll();
+    @Override
+    public String listProjects(String option) {
+        if (option.isEmpty()) {
+            List<Project> projects = projectService.findAll();
 
-        return utilDriver.listCollection("The following projects are available:", projects);
+            return utilDriver.listCollection("The following projects are available:", projects);
+        }
+        else if (option.equals("time")) {
+            return listTime();
+        }
+        else {
+            return String.format("'%s' is not recognized as a valid parameter");
+        }
+    }
+
+    private String listTime() {
+        Project project = null;
+
+        System.out.println();
+        printAllProjects();
+        System.out.println();
+
+        do  {
+            String input = lineReader.readLine("Enter projectId> ");
+
+            try {
+                int projectId = Integer.parseInt(input);
+                Optional<Project> optionalP = projectService.findById(projectId);
+                project = optionalP.get();
+            }
+            catch (Exception ex) {
+                project = null;
+            }
+        } while (project == null);
+
+        double estimatedTimeSum = getEstimatedTimeSumOfProject(project);
+
+        List<Employee> employees = project.getEmployees();
+
+        StringBuffer sb = new StringBuffer();
+
+        sb.append(String.format("Working times for project %s%n", project.toString()));
+
+        for (Employee employee : employees) {
+            sb.append(String.format("  %s%n", employee.toString()));
+            sb.append(
+                    String.format("    Time already invested: %.2fh%n",
+                    projectService.getTimeInvestedInProjectByEmployee(project, employee)));
+
+            sb.append(
+                    String.format("    Time to invest: %.2fh%n",
+                    projectService.getTimeToInvestInProjectByEmployee(project, employee)));
+
+            sb.append(String.format("    Estimated time sum: %.2fh", estimatedTimeSum));
+        }
+
+        return sb.toString();
+    }
+
+    private double getEstimatedTimeSumOfProject(Project project) {
+        double timeSum = 0.0;
+
+        for (Issue issue : project.getIssues()) {
+            timeSum += issue.getEstimatedTime();
+        }
+
+        return timeSum;
     }
 }

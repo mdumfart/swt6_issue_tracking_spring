@@ -21,7 +21,7 @@ public class Project implements Serializable {
 
     @org.hibernate.annotations.Fetch(FetchMode.SELECT)
     @OneToMany(mappedBy = "project", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private Set<Issue> issues = new HashSet<>();
+    private List<Issue> issues = new ArrayList<>();
 
     @org.hibernate.annotations.Fetch(FetchMode.SELECT)
     @ManyToMany(fetch = FetchType.LAZY)
@@ -50,11 +50,11 @@ public class Project implements Serializable {
         this.name = name;
     }
 
-    public Set<Issue> getIssues() {
+    public List<Issue> getIssues() {
         return issues;
     }
 
-    public void setIssues(Set<Issue> issues) {
+    public void setIssues(List<Issue> issues) {
         this.issues = issues;
     }
 

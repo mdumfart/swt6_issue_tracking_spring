@@ -77,7 +77,8 @@ public class ProjectServiceImpl implements ProjectService {
         Project p = optionalP.get();
         Employee e = optionalE.get();
 
-        if (!employeeService.findByProject(p).contains(e)) throw new IllegalArgumentException("Employee is not assigned to project");
+        List<Employee> t = employeeService.findByProject(p);
+        if (employeeService.findByProject(p).stream().noneMatch(empl -> empl.getId() == e.getId())) throw new IllegalArgumentException("Employee is not assigned to project");
 
         double timeSum = 0;
 
@@ -98,15 +99,15 @@ public class ProjectServiceImpl implements ProjectService {
         Project p = optionalP.get();
         Employee e = optionalE.get();
 
-        if (!employeeService.findByProject(p).contains(e)) throw new IllegalArgumentException("Employee is not assigned to project");
+        if (employeeService.findByProject(p).stream().noneMatch(empl -> empl.getId() == e.getId())) throw new IllegalArgumentException("Employee is not assigned to project");
 
         double timeSumEstimated = 0;
         double timeSumSpent = 0;
 
-        List<Issue> issues = p.getIssues().stream().filter(issue -> issue.getEmployee().equals(e)).collect(Collectors.toList());
+        List<Issue> issues = p.getIssues().stream().filter(issue -> issue.getEmployee().getId() == e.getId()).collect(Collectors.toList());
         for (Issue i : issues) {
             timeSumEstimated += i.getEstimatedTime();
-            timeSumEstimated += i.getExpendedTime();
+            timeSumSpent += i.getExpendedTime();
         }
 
         return timeSumEstimated - timeSumSpent;

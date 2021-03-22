@@ -1,4 +1,4 @@
-package swt6.spring.worklog.client.beans;
+package swt6.spring.worklog.client.viewmodels;
 
 import org.springframework.stereotype.Component;
 import swt6.spring.worklog.domain.Employee;
@@ -10,15 +10,16 @@ import java.util.List;
 import java.util.Optional;
 
 @Component
-public class EmployeeDriver {
+public class EmployeeUiProcessComponent implements EmployeeUiProcessFacade {
     private final EmployeeService employeeService;
     private final ProjectService projectService;
 
-    public EmployeeDriver(EmployeeService employeeService, ProjectService projectService) {
+    public EmployeeUiProcessComponent(EmployeeService employeeService, ProjectService projectService) {
         this.employeeService = employeeService;
         this.projectService = projectService;
     }
 
+    @Override
     public String listEmployeeCommand(String option) {
         StringBuffer sb = new StringBuffer();
 

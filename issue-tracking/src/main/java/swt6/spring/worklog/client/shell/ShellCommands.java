@@ -3,27 +3,24 @@ package swt6.spring.worklog.client.shell;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
 import org.springframework.shell.standard.ShellOption;
-import swt6.spring.worklog.client.beans.EmployeeDriver;
-import swt6.spring.worklog.client.beans.IssueDriver;
-import swt6.spring.worklog.client.beans.ProjectDriver;
-import swt6.spring.worklog.client.beans.UtilDriver;
+import swt6.spring.worklog.client.viewmodels.*;
 import swt6.spring.worklog.client.util.AppEntity;
 
 @ShellComponent
 public class ShellCommands {
     private final UtilDriver utilDriver;
-    private final IssueDriver issueDriver;
-    private final ProjectDriver projectDriver;
-    private final EmployeeDriver employeeDriver;
+    private final IssueUiProcessFacade issueUiProcessFacade;
+    private final ProjectUiProcessFacade projectUiProcessFacade;
+    private final EmployeeUiProcessFacade employeeUiProcessFacade;
 
     public ShellCommands(UtilDriver validateDriver,
-                         IssueDriver issueDriver,
-                         ProjectDriver projectDriver,
-                         EmployeeDriver employeeDriver) {
+                         IssueUiProcessFacade issueUiProcessFacade,
+                         ProjectUiProcessFacade projectUiProcessFacade,
+                         EmployeeUiProcessFacade employeeUiProcessFacade) {
         this.utilDriver = validateDriver;
-        this.issueDriver = issueDriver;
-        this.projectDriver = projectDriver;
-        this.employeeDriver = employeeDriver;
+        this.issueUiProcessFacade = issueUiProcessFacade;
+        this.projectUiProcessFacade = projectUiProcessFacade;
+        this.employeeUiProcessFacade = employeeUiProcessFacade;
     }
 
     @ShellMethod("Create an instance of an object")
@@ -34,15 +31,19 @@ public class ShellCommands {
             return String.format("'%s' is not a supported entity", kind);
 
         if (e == AppEntity.project) {
-            return projectDriver.createCommand();
+            return projectUiProcessFacade.createCommand();
         }
         else {
-            return issueDriver.createCommand();
+            return issueUiProcessFacade.createCommand();
         }
     }
 
     @ShellMethod("List employees, projects or issues")
-    public String list(@ShellOption String kind, @ShellOption(defaultValue = "") String option) {
+    public String list(
+            @ShellOption String kind,
+            @ShellOption(defaultValue = "") String option1,
+            @ShellOption(defaultValue = "") String option2,
+            @ShellOption(defaultValue = "") String option3) {
         AppEntity e = utilDriver.validateListParam(kind);
 
         if (e == null)
@@ -51,15 +52,15 @@ public class ShellCommands {
         StringBuffer sb = new StringBuffer();
 
         if (e == AppEntity.employee) {
-            return employeeDriver.listEmployeeCommand(option);
+            return employeeUiProcessFacade.listEmployeeCommand(option1);
         }
 
         if (e == AppEntity.project) {
-            return projectDriver.listProjects();
+            return projectUiProcessFacade.listProjects(option1);
         }
 
         if (e == AppEntity.issue) {
-            return issueDriver.listIssues();
+            return issueUiProcessFacade.listIssues(option1, option2, option3);
         }
 
         return "Something went wrong";
@@ -73,11 +74,11 @@ public class ShellCommands {
             return String.format("'%s' is not a supported entity", kind);
 
         if (e == AppEntity.project) {
-            return projectDriver.updateCommand(option);
+            return projectUiProcessFacade.updateCommand(option);
         }
 
         if (e == AppEntity.issue) {
-            return issueDriver.updateCommand(option);
+            return issueUiProcessFacade.updateCommand(option);
         }
 
         return "Something went wrong";

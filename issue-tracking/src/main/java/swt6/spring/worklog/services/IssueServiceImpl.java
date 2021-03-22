@@ -48,7 +48,7 @@ public class IssueServiceImpl implements IssueService {
     }
 
     @Override
-    public void update(Issue issue) {
+    public Issue update(Issue issue) {
         Optional<Issue> persistedIssueOptional = issueDao.findById(issue.getId());
 
         // Check if issue does exist
@@ -76,7 +76,7 @@ public class IssueServiceImpl implements IssueService {
             }
         }
 
-        issueDao.save(issue);
+        return issueDao.save(issue);
     }
 
     @Override

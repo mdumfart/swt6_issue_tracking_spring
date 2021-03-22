@@ -80,7 +80,7 @@
 
     <aop:config>
         <aop:aspect id="jpaInterceptor" ref="jpaInterceptor">
-            <aop:around method="holdEntityManager" pointcut="execution(public * swt6.spring.worklog.client..*(..))"/>
+            <aop:around method="holdEntityManager" pointcut="execution(public * swt6.spring.worklog.client.viewmodels..*(..))"/>
         </aop:aspect>
     </aop:config>
 </beans>
