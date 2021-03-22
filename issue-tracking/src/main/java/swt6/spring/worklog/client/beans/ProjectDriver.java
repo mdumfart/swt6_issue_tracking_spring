@@ -17,6 +17,7 @@ public class ProjectDriver {
     private LineReader lineReader;
     private ProjectService projectService;
     private EmployeeService employeeService;
+    private UtilDriver utilDriver;
 
     @Autowired
     @Lazy
@@ -32,6 +33,11 @@ public class ProjectDriver {
     @Autowired
     public void setEmployeeService(EmployeeService employeeService) {
         this.employeeService = employeeService;
+    }
+
+    @Autowired
+    public void setUtilDriver(UtilDriver utilDriver) {
+        this.utilDriver = utilDriver;
     }
 
     public String createCommand() {
@@ -67,13 +73,13 @@ public class ProjectDriver {
                 projectId = Integer.parseInt(option);
             }
             catch (Exception ex) {
-                return String.format("'%s' is not a valid projectId", option);
+                return String.format("'%s' is not a valid projectId%n", option);
             }
         }
 
         Optional<Project> optionalP = projectService.findById(projectId);
 
-        if (optionalP.isEmpty()) return String.format("Project with id [%s] not found", projectId);
+        if (optionalP.isEmpty()) return String.format("Project with id [%s] not found%n", projectId);
 
         return updateProject(optionalP.get());
     }
@@ -89,7 +95,7 @@ public class ProjectDriver {
     }
 
     private String updateProject(Project project) {
-        System.out.printf("Update project %s", project.toString());
+        System.out.printf("Update project %s%n", project.toString());
         System.out.println("  1: Change name");
         System.out.println("  2: Add employee");
         System.out.println("  3: Remove employee");
@@ -108,7 +114,7 @@ public class ProjectDriver {
             }
         }
 
-        return "todo";
+        return "Something went wrong";
     }
 
     private String changeProjectTitle(Project project) {
@@ -125,13 +131,17 @@ public class ProjectDriver {
     private String addEmployeeToProject(Project project) {
         List<Employee> employees = employeeService.findAll();
 
+        if (employees.isEmpty()) {
+            return "There are no employees to add";
+        }
+
         for (Employee e : project.getEmployees()) {
             employees.remove(e);
         }
 
-        System.out.printf("The following employees are available to add to %s", project.toString());
+        System.out.printf("The following employees are available to add to %s%n", project.toString());
         for (Employee e : employees) {
-            System.out.printf("  %s", e.toString());
+            System.out.printf("  %s%n", e.toString());
         }
 
         int employeeId;
@@ -150,8 +160,7 @@ public class ProjectDriver {
 
         } while (employee == null);
 
-        project.addEmployee(employee);
-        projectService.save(project);
+        project = projectService.assignEmployeeToProject(employee, project);
 
         return "success";
     }
@@ -159,13 +168,19 @@ public class ProjectDriver {
     private String removeEmployeeFromProject(Project project) {
         List<Employee> employees = employeeService.findByProject(project);
 
+        if (employees.isEmpty()) {
+            return "There are no employees to remove";
+        }
+
         StringBuffer sb = new StringBuffer();
 
-        sb.append(String.format("Employees assigned to %s", project.toString()));
+        sb.append(String.format("Employees assigned to %s%n", project.toString()));
 
         for (Employee employee : employees) {
             sb.append(String.format("  %s%n", employee.toString()));
         }
+
+        System.out.println(sb.toString());
 
         int employeeId;
         Employee employee = null;
@@ -183,9 +198,14 @@ public class ProjectDriver {
 
         } while (employee == null);
 
-        project.removeEmployee(employee);
-        projectService.save(project);
+        project = projectService.removeEmployeeFromProject(employee, project);
 
         return "success";
+    }
+
+    public String listProjects() {
+        List<Project> projects = projectService.findAll();
+
+        return utilDriver.listCollection("The following projects are available:", projects);
     }
 }

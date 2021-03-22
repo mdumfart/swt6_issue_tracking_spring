@@ -37,13 +37,11 @@ public class ShellCommands {
             return projectDriver.createCommand();
         }
         else {
-            issueDriver.createCommand();
+            return issueDriver.createCommand();
         }
-
-        return kind;
     }
 
-    @ShellMethod("List employees or issues")
+    @ShellMethod("List employees, projects or issues")
     public String list(@ShellOption String kind, @ShellOption(defaultValue = "") String option) {
         AppEntity e = utilDriver.validateListParam(kind);
 
@@ -56,7 +54,15 @@ public class ShellCommands {
             return employeeDriver.listEmployeeCommand(option);
         }
 
-        return "adf";
+        if (e == AppEntity.project) {
+            return projectDriver.listProjects();
+        }
+
+        if (e == AppEntity.issue) {
+            return issueDriver.listIssues();
+        }
+
+        return "Something went wrong";
     }
 
     @ShellMethod("Update projects or issues")
@@ -70,6 +76,10 @@ public class ShellCommands {
             return projectDriver.updateCommand(option);
         }
 
-        return "todo";
+        if (e == AppEntity.issue) {
+            return issueDriver.updateCommand(option);
+        }
+
+        return "Something went wrong";
     }
 }

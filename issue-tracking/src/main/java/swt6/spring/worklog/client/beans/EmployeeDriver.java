@@ -46,7 +46,7 @@ public class EmployeeDriver {
 
             List<Employee> employeeList = employeeService.findByProject(optionalP.get());
 
-            sb.append(String.format("Employees assigned to %s", optionalP.get().toString()));
+            sb.append(String.format("Employees assigned to %s%n", optionalP.get().toString()));
 
             for (Employee employee : employeeList) {
                 sb.append(String.format("  %s%n", employee.toString()));

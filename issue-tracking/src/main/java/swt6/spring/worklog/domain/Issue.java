@@ -29,7 +29,7 @@ public class Issue implements Serializable {
     private double expendedTime = 0.0d;
 
     @Column(nullable = false)
-    private double progress;
+    private double progress = 0.0;
 
     @org.hibernate.annotations.Fetch(FetchMode.SELECT)
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.LAZY)
@@ -47,16 +47,15 @@ public class Issue implements Serializable {
     public Issue() {
     }
 
-    public Issue(String name, IssueState state, IssuePriority priority, double progress, Project project) {
+    public Issue(String name, IssueState state, IssuePriority priority, Project project) {
         this.name = name;
         this.state = state;
         this.priority = priority;
-        this.progress = progress;
         this.project = project;
     }
 
-    public Issue(String name, IssueState state, IssuePriority priority, double estimatedTime, double progress, Project project) {
-        this(name, state, priority, progress, project);
+    public Issue(String name, IssueState state, IssuePriority priority, double estimatedTime, Project project) {
+        this(name, state, priority, project);
         this.estimatedTime = estimatedTime;
     }
 
@@ -155,13 +154,15 @@ public class Issue implements Serializable {
 
         sb.append(String.format("Issue %d: %s, %s ", id, name, state));
 
-        if (estimatedTime != 0.0d) sb.append(String.format(", estimated time: %.2f" , estimatedTime));
-
         sb.append(String.format(", progress: %d%%", (int)(progress * 100)));
 
         if (employee != null) {
-            sb.append(String.format(" --- assigned employee: %s", employee.toString()));
+            sb.append(String.format("%n  - Assigned employee: %s", employee.toString()));
         }
+
+        sb.append(String.format("%n  - Estimated time: %.2fh" , estimatedTime));
+        sb.append(String.format("%n  - Expended time: %.2fh" , expendedTime));
+        sb.append(String.format("%n  - Belongs to project %s", project.toString()));
 
         return sb.toString();
     }

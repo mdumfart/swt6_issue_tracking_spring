@@ -11,6 +11,6 @@ import java.util.List;
 
 @Repository
 public interface EmployeeDao extends JpaRepository<Employee, Long> {
-    @Query("select e from Employee e join Project p where p = :project")
+    @Query("select e from Project p JOIN p.employees e where p = :project")
     List<Employee> findByProject(@Param("project")Project project);
 }

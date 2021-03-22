@@ -73,8 +73,16 @@
     -->
     <tx:annotation-driven transaction-manager="transactionManager"/>
 
-    <!-- ========================= UIProcessComponent =========================== -->
+    <!-- ========================= LAZY LOADING WITH INTERCEPTOR =========================== -->
+    <bean id="jpaInterceptor" class="swt6.util.JpaInterceptor">
+        <property name="entityManagerFactory" ref="entityManagerFactory"/>
+    </bean>
 
+    <aop:config>
+        <aop:aspect id="jpaInterceptor" ref="jpaInterceptor">
+            <aop:around method="holdEntityManager" pointcut="execution(public * swt6.spring.worklog.client..*(..))"/>
+        </aop:aspect>
+    </aop:config>
 </beans>
 
 

@@ -4,9 +4,7 @@ import org.hibernate.annotations.FetchMode;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 @Entity
 public class Project implements Serializable {
@@ -27,7 +25,7 @@ public class Project implements Serializable {
 
     @org.hibernate.annotations.Fetch(FetchMode.SELECT)
     @ManyToMany(fetch = FetchType.LAZY)
-    private Set<Employee> employees = new HashSet<>();
+    private List<Employee> employees = new ArrayList<>();
 
     public Long getId() {
         return id;
@@ -70,11 +68,11 @@ public class Project implements Serializable {
         issue.setProject(null);
     }
 
-    public Set<Employee> getEmployees() {
+    public List<Employee> getEmployees() {
         return employees;
     }
 
-    public void setEmployees(Set<Employee> employees) {
+    public void setEmployees(List<Employee> employees) {
         this.employees = employees;
     }
 
