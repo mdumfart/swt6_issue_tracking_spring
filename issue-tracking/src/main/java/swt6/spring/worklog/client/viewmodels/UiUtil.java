@@ -22,7 +22,7 @@ import java.util.Arrays;
 import java.util.List;
 
 @Component
-public class UtilDriver {
+public class UiUtil {
     private static final List<String> issueAliases = Arrays.asList("issue", "iss", "i");
     private static final List<String> projectAliases = Arrays.asList("project", "proj", "p");
     private static final List<String> employeeAliases = Arrays.asList("employee", "empl", "e");

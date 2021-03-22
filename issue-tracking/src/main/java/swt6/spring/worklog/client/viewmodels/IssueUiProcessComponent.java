@@ -20,7 +20,7 @@ public class IssueUiProcessComponent implements IssueUiProcessFacade {
     private IssueService issueService;
     private ProjectService projectService;
     private EmployeeService employeeService;
-    private UtilDriver utilDriver;
+    private UiUtil utilDriver;
 
     private final String GROUPED_FLAG = "-g";
 
@@ -40,7 +40,7 @@ public class IssueUiProcessComponent implements IssueUiProcessFacade {
     }
 
     @Autowired
-    public void setUtilDriver(UtilDriver utilDriver) {
+    public void setUtilDriver(UiUtil utilDriver) {
         this.utilDriver = utilDriver;
     }
 

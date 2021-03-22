@@ -48,9 +48,6 @@
     <!-- BeanPostProcessor for exception translation -->
     <bean class="org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor"/>
 
-    <!-- ============================ DAO DEFINITIONS =========================== -->
-
-    <!-- ====================== BUSINESS OBJECT DEFINITIONS ======================= -->
 
     <!-- ======================== TRANSACTION DEFINITIONS ========================= -->
 
@@ -58,19 +55,6 @@
         <property name="entityManagerFactory" ref="entityManagerFactory"/>
     </bean>
 
-    <!--
-    <tx:advice id="txAdvice" transaction-manager="transactionManager">
-        <tx:attributes>
-            <tx:method name="find*" read-only="true"/>
-            <tx:method name="*" />
-        </tx:attributes>
-    </tx:advice>
-
-    <aop:config>
-        <aop:pointcut id="transactedOperations" expression="execution(public * swt6.spring.worklog.services.WorklogImpl1.*(..))"/>
-        <aop:advisor advice-ref="txAdvice" pointcut-ref="transactedOperations"/>
-    </aop:config>
-    -->
     <tx:annotation-driven transaction-manager="transactionManager"/>
 
     <!-- ========================= LAZY LOADING WITH INTERCEPTOR =========================== -->

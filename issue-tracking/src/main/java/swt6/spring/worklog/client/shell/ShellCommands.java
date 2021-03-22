@@ -8,12 +8,12 @@ import swt6.spring.worklog.client.util.AppEntity;
 
 @ShellComponent
 public class ShellCommands {
-    private final UtilDriver utilDriver;
+    private final UiUtil utilDriver;
     private final IssueUiProcessFacade issueUiProcessFacade;
     private final ProjectUiProcessFacade projectUiProcessFacade;
     private final EmployeeUiProcessFacade employeeUiProcessFacade;
 
-    public ShellCommands(UtilDriver validateDriver,
+    public ShellCommands(UiUtil validateDriver,
                          IssueUiProcessFacade issueUiProcessFacade,
                          ProjectUiProcessFacade projectUiProcessFacade,
                          EmployeeUiProcessFacade employeeUiProcessFacade) {

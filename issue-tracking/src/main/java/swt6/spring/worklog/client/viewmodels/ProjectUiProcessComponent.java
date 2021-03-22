@@ -19,7 +19,7 @@ public class ProjectUiProcessComponent implements ProjectUiProcessFacade {
     private LineReader lineReader;
     private ProjectService projectService;
     private EmployeeService employeeService;
-    private UtilDriver utilDriver;
+    private UiUtil utilDriver;
 
     @Autowired
     @Lazy
@@ -38,7 +38,7 @@ public class ProjectUiProcessComponent implements ProjectUiProcessFacade {
     }
 
     @Autowired
-    public void setUtilDriver(UtilDriver utilDriver) {
+    public void setUtilDriver(UiUtil utilDriver) {
         this.utilDriver = utilDriver;
     }
 
